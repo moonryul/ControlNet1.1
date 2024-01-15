@@ -509,6 +509,7 @@ class Encoder(nn.Module):
 
         # end
         self.norm_out = Normalize(block_in)
+        #MJ:see https://nn.labml.ai/diffusion/stable_diffusion/model/autoencoder.html:  z_channels is the number of channels in the embedding space
         self.conv_out = torch.nn.Conv2d(block_in,
                                         2*z_channels if double_z else z_channels,
                                         kernel_size=3,

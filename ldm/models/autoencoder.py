@@ -14,7 +14,7 @@ class AutoencoderKL(pl.LightningModule):
     def __init__(self,
                  ddconfig,
                  lossconfig,
-                 embed_dim,
+                 embed_dim, #MJ: emb_channels is the number of dimensions in the quantized embedding space
                  ckpt_path=None,
                  ignore_keys=[],
                  image_key="image",
@@ -31,6 +31,9 @@ class AutoencoderKL(pl.LightningModule):
         self.loss = instantiate_from_config(lossconfig)
         assert ddconfig["double_z"]
         self.quant_conv = torch.nn.Conv2d(2*ddconfig["z_channels"], 2*embed_dim, 1)
+        #MJ: see https://nn.labml.ai/diffusion/stable_diffusion/model/autoencoder.html: Convolution to map from embedding space to quantized embedding space moments (mean and log variance)
+        #MJ:  For example, if the codebook has 256 clusters, the quantized embedding vector can be represented by an 8-bit integer.
+        
         self.post_quant_conv = torch.nn.Conv2d(embed_dim, ddconfig["z_channels"], 1)
         self.embed_dim = embed_dim
         if colorize_nlabels is not None:
@@ -80,14 +83,14 @@ class AutoencoderKL(pl.LightningModule):
             self.model_ema(self)
 
     def encode(self, x):
-        h = self.encoder(x)
-        moments = self.quant_conv(h)
+        h = self.encoder(x)           #MJ: encode image x into the latent space (continuous)
+        moments = self.quant_conv(h)  #MJ: quantize the encoded latent tensor
         posterior = DiagonalGaussianDistribution(moments)
         return posterior
 
     def decode(self, z):
-        z = self.post_quant_conv(z)
-        dec = self.decoder(z)
+        z = self.post_quant_conv(z)  #MJ: dequantize the latent tensor z
+        dec = self.decoder(z)        #MJ: decode the dequantized latent vector
         return dec
 
     def forward(self, input, sample_posterior=True):

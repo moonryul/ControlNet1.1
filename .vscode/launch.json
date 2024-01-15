@@ -1,0 +1,64 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: gradio controlNet tile",
+            "type": "python",
+            "request": "launch",
+            //"program": "${file}",
+            "program": "${workspaceFolder}/gradio_tile.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            //  "args": [
+            //            "--share",
+            //            "--xformers", "--no-half-vae",] // "--reinstall-xformers"]
+ // ou are running xformers 0.0.19. The program is tested to work with xformers 0.0.20.To reinstall the desired version, run with commandline flag --reinstall-xformers.                      
+// https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/543
+// demo.launch(share=True)
+
+            //  "args": [
+            //     "-t",
+            //     "--base", "configs/stable-diffusion/pokemon.yaml",
+            //     "--gpus", "0,1,",
+            //     "--scale_lr", "False",
+            //     "--num_nodes", "1",
+            //     "--check_val_every_n_epoch", "10",
+            //     "--finetune_from", "${workspaceFolder}/stable-diffusion-v-1-4-original/sd-v1-4-full-ema.ckpt",
+            //     "data.params.batch_size=1",
+            //     "lightning.trainer.accumulate_grad_batches=1",
+            //     "data.params.validation.params.n_gpus=2"
+            //  ]
+        },
+        
+        {
+            "name": "Python: controlNet tile upscaling",
+            "type": "python",
+            "request": "launch",
+            //"program": "${file}",
+            "program": "${workspaceFolder}/scripts/controlNetTileUpscale.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            // "args": [
+            //     "--indir", "inputs",
+            //    "--outdir", "inputs",
+            //]
+            //  "args": [
+            //     "-t",
+            //     "--base", "configs/stable-diffusion/pokemon.yaml",
+            //     "--gpus", "0,1,",
+            //     "--scale_lr", "False",
+            //     "--num_nodes", "1",
+            //     "--check_val_every_n_epoch", "10",
+            //     "--finetune_from", "${workspaceFolder}/stable-diffusion-v-1-4-original/sd-v1-4-full-ema.ckpt",
+            //     "data.params.batch_size=1",
+            //     "lightning.trainer.accumulate_grad_batches=1",
+            //     "data.params.validation.params.n_gpus=2"
+            //  ]
+        },
+    ]
+}

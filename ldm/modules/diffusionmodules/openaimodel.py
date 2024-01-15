@@ -145,7 +145,7 @@ class Downsample(nn.Module):
         self.out_channels = out_channels or channels
         self.use_conv = use_conv
         self.dims = dims
-        stride = 2 if dims != 3 else (1, 2, 2)
+        stride = 2 if dims != 3 else (1, 2, 2)  #MJ: stride = 2 because dims=2
         if use_conv:
             self.op = conv_nd(
                 dims, self.channels, self.out_channels, 3, stride=stride, padding=padding
@@ -661,7 +661,7 @@ class UNetModel(nn.Module):
 
         self.output_blocks = nn.ModuleList([])
         for level, mult in list(enumerate(channel_mult))[::-1]:
-            for i in range(self.num_res_blocks[level] + 1):
+            for i in range(self.num_res_blocks[level] + 1): #MJ: i = 0,1,2
                 ich = input_block_chans.pop()
                 layers = [
                     ResBlock(
@@ -703,7 +703,8 @@ class UNetModel(nn.Module):
                                 use_checkpoint=use_checkpoint
                             )
                         )
-                if level and i == self.num_res_blocks[level]:
+                #        
+                if level and i == self.num_res_blocks[level]: #MJ: level != 0, i == 2,2,2,2
                     out_ch = ch
                     layers.append(
                         ResBlock(
@@ -720,9 +721,11 @@ class UNetModel(nn.Module):
                         else Upsample(ch, conv_resample, dims=dims, out_channels=out_ch)
                     )
                     ds //= 2
+                #if level and i == self.num_res_blocks[level]: #MJ: level != 0, i == 2,2,2,2    
                 self.output_blocks.append(TimestepEmbedSequential(*layers))
                 self._feature_size += ch
-
+            #for i in range(self.num_res_blocks[level] + 1): #MJ: i = 0,1,2
+        #for level, mult in list(enumerate(channel_mult))[::-1]:    
         self.out = nn.Sequential(
             normalization(ch),
             nn.SiLU(),

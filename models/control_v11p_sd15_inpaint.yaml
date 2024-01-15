@@ -12,7 +12,8 @@ model:
     image_size: 64
     channels: 4
     cond_stage_trainable: false
-    conditioning_key: crossattn
+    conditioning_key: crossattn  #MJ: This controlNet inpaint does not use the sd inpaint pipeline;
+                                 # If so, we need to set conditioning_key as "hybrid"
     monitor: val/loss_simple_ema
     scale_factor: 0.18215
     use_ema: False
@@ -44,7 +45,7 @@ model:
         model_channels: 320
         attention_resolutions: [ 4, 2, 1 ]
         num_res_blocks: 2
-        channel_mult: [ 1, 2, 4, 4 ]
+        channel_mult: [ 1, 2, 4, 4 ]  #MJ: channels=[320,640, 1280, 1280]
         num_heads: 8
         use_spatial_transformer: True
         transformer_depth: 1
@@ -60,7 +61,7 @@ model:
         ddconfig:
           double_z: true
           z_channels: 4
-          resolution: 256
+          resolution: 256  #MJ: the same as sample_size in diffusers vae config
           in_channels: 3
           out_ch: 3
           ch: 128
